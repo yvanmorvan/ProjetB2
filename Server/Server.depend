@@ -1,0 +1,20 @@
+# depslib dependency file v1.0
+1392735840 source:c:\users\soerk\desktop\projet b2\server\main.cpp
+	<iostream>
+	"include/Server.h"
+	"include/winsock2.h"
+
+1393181843 c:\users\soerk\desktop\projet b2\server\include\server.h
+	"winsock2.h"
+
+1228534334 c:\users\soerk\desktop\projet b2\server\include\winsock2.h
+	<windows.h>
+
+1392735792 c:\users\soerk\desktop\projet b2\server\include\const.h
+	"Server.h"
+
+1393181720 source:c:\users\soerk\desktop\projet b2\server\src\server.cpp
+	<iostream>
+	"../include/Server.h"
+	"../include/winsock2.h"
+
