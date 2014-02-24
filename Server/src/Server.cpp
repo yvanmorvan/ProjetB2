@@ -37,7 +37,7 @@ int Server::init(){
 
     ServerAddr.sin_family = AF_INET;
 	ServerAddr.sin_port = htons( port );
-	ServerAddr.sin_addr.s_addr = inet_addr( inet_ntoa( MyAddress ) );
+	ServerAddr.sin_addr.s_addr = inet_addr( "127.0.0.1" );
 
 	cout <<"Serveur initialise !" << endl;
 
@@ -53,6 +53,8 @@ int Server::start(){
     HANDLE hProcessThread;
     SOCKET NewConnection;
     struct thread_param p;
+    char* reception;
+    int receptionLength;
 
     if ((ListeningSocket = socket(PF_INET, SOCK_STREAM, IPPROTO_TCP)) == INVALID_SOCKET){
         cerr << "Impossible d'ouvrir le socket : "<< WSAGetLastError() << endl;
@@ -67,7 +69,7 @@ int Server::start(){
         return 0;
     }
 
-    if (listen(ListeningSocket, 5) == SOCKET_ERROR){
+    if (listen(ListeningSocket, 0) == SOCKET_ERROR){
         cerr << "Impossible d'ecouter sur ce port." << endl;
         closesocket(ListeningSocket);
         WSACleanup();
@@ -103,7 +105,6 @@ int Server::start(){
 
     }
 
-
 }
 
 
@@ -121,7 +122,7 @@ int Server::pause(){
 
 DWORD Server::ClientThread(SOCKET socket){
 
-    cout << "Thread a l'ecoute !" << endl;
+    cout << "Thread ( "<<socket<<" ) a l'ecoute !\n" << endl;
 
     return 1;
 }
