@@ -53,8 +53,6 @@ int Server::start(){
     HANDLE hProcessThread;
     SOCKET NewConnection;
     struct thread_param p;
-    char* reception;
-    int receptionLength;
 
     if ((ListeningSocket = socket(PF_INET, SOCK_STREAM, IPPROTO_TCP)) == INVALID_SOCKET){
         cerr << "Impossible d'ouvrir le socket : "<< WSAGetLastError() << endl;
