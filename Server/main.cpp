@@ -2,7 +2,7 @@
 #include "include/Server.h"
 #include "include/winsock2.h"
 
-#pragma comment(../lib/libws2_32.a)
+#pragma comment(lib, "../lib/libws2_32.a")
 
 using namespace std;
 

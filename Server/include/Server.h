@@ -2,7 +2,7 @@
 #define SERVER_H
 
 #include "winsock2.h"
-#pragma comment(../lib/libws2_32.a)
+#pragma comment(lib, "../lib/libws2_32.a")
 
 
 class Server;
@@ -26,6 +26,7 @@ class Server{
             // Methode statique
             struct thread_param *Thread = reinterpret_cast<struct thread_param*>(p);
             Server *s = Thread->server;
+            // ClientThread se chargera d'écouter les évènements envoyés par le client.
             return s->ClientThread(Thread->socket);
 
 		}
@@ -33,8 +34,8 @@ class Server{
     private:
 
         int           port;
+        bool          running;
 		SOCKET	      ListeningSocket;
-		bool          running;
 		SOCKADDR_IN   ServerAddr;
 		DWORD         ClientThread(SOCKET);
 };
