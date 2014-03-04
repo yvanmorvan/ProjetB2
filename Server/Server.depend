@@ -29,3 +29,8 @@
 1228534334 c:\users\soerk\desktop\projetb2\server\include\winsock2.h
 	<windows.h>
 
+1393945323 source:c:\users\soerk\desktop\projetb2\server\src\server.cpp
+	<iostream>
+	"../include/Server.h"
+	"../include/winsock2.h"
+

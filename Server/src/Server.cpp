@@ -109,6 +109,8 @@ int Server::start(){
 
         // Ecoute du client
         do{
+            // Reset du buffer
+            memset(&recvbuf, 0, recvbuflen);
             result = recv(p.socket, recvbuf, recvbuflen, 0);
 
             if (result > 0){
@@ -120,8 +122,8 @@ int Server::start(){
                     closesocket(p.socket);
                     WSACleanup();
                     return 0;
-                }
-                */
+                }*/
+
                 cout << "Donnees recues : " << recvbuf << endl;
             }
 

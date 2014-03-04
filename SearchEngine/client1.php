@@ -11,11 +11,11 @@
 
 	}else {
 
-		fputs ($fp, "Hi");
+		fputs ($fp, "This is the research");
 		$rsps = "";
 
-		while ($rsps <> "END") {
-			$rsps = fgets ($fp, 1024);
+		while ($rsps != "END") {
+			$rsps = fgets ($fp, 512);
 			echo $rsps;
 		}
 
