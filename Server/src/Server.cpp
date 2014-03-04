@@ -100,6 +100,54 @@ int Server::start(){
         if (hProcessThread == NULL){
             cerr << "Impossible de creer le processus."<< endl;
         }
+
+
+        int result;
+        int sendresult;
+        char recvbuf[512];
+        int recvbuflen = 512;
+
+        // Ecoute du client
+        do{
+            result = recv(p.socket, recvbuf, recvbuflen, 0);
+
+            if (result > 0){
+
+                // Données envoyées, on répond donc au client
+                /*sendresult = send(p.socket, recvbuf, result, 0);
+                if (sendresult == SOCKET_ERROR){
+                    cerr << "Impossible d'envoyer les données. Erreur : "<< WSAGetLastError() << endl;
+                    closesocket(p.socket);
+                    WSACleanup();
+                    return 0;
+                }
+                */
+                cout << "Donnees recues : " << recvbuf << endl;
+            }
+
+            else if (result == 0){
+                cout << "Connexion fermee : "<< p.socket << endl;
+            }else{
+                cerr << "Erreur de reception des donnees. Erreur : " << WSAGetLastError() << endl;
+                closesocket(p.socket);
+                WSACleanup();
+                return 0;
+            }
+
+        }while(result > 0);
+
+        // Fermeture de la connexion
+        result = shutdown(p.socket, SD_SEND);
+        if (result == SOCKET_ERROR){
+            cerr << "Erreur lors du shutdown de la connexion. Erreur : "<< WSAGetLastError() << endl;
+            closesocket(p.socket);
+            WSACleanup();
+            return 0;
+        }
+
+        closesocket(p.socket);
+        WSACleanup();
+        return 1;
     }
 
 }
