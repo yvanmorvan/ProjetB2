@@ -126,6 +126,7 @@ DWORD Server::ClientThread(SOCKET socket){
     int sendresult;
     char recvbuf[512];
     int recvbuflen = 512;
+    char *sendbuff = "END";
 
     // Ecoute du client
     do{
@@ -135,6 +136,7 @@ DWORD Server::ClientThread(SOCKET socket){
 
         if (result > 0){
             cout << "La connexion "<< socket <<" a envoye : " << recvbuf << endl;
+            send(socket, sendbuff, (int)strlen(sendbuff), 0);
         }
 
         else if (result == 0){

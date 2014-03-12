@@ -1,0 +1,116 @@
+/* COLOMBUS STYLESHEET */
+
+
+/* FONTS */
+@font-face {
+    font-family: 'Coda';
+    src: url('../content/fonts/Coda-Regular.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Dosis';
+    src: url('../content/fonts/Dosis-Regular.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Iceland';
+    src: url('../content/fonts/Iceland-Regular.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'RockSalt';
+    src: url('../content/fonts/RockSalt.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'FingerPaint';
+    src: url('../content/fonts/FingerPaint-Regular.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+
+body {
+	color: #222;
+	font-size: 12px;
+	font-family: Dosis;
+	background-attachment: fixed;
+	background-repeat: no-repeat;
+	background-size: cover;
+	margin: 0 auto;
+	text-align: center;
+}
+
+img {
+	border: none; /* IE */
+}
+
+#container {
+	position: relative;
+	width: 30%;
+	padding: 1%;
+	margin: 12% auto 0;
+	min-width: 300px;
+}
+
+.bg {
+	position: absolute;
+	top: 0;
+	bottom: 0;
+	left: 0;
+	right: 0;
+	background: rgba(255,255,255,0.3);
+	z-index: 1;
+}
+
+#research-wrapper {
+	position: relative;
+	width: 100%;
+	padding: 5% 0;
+	border: 1px solid #777;
+	z-index: 2;
+}
+
+#branding {
+	position: relative;
+	font-size: 20px;
+	text-transform: uppercase;
+	z-index: 3;
+}
+
+#enter-rs {
+	position: relative;
+	margin-top: 5%;
+	z-index: 3;
+}
+
+#rs {
+	position: relative;
+	width: 70%;
+	text-align: center;
+	font-family: 'Dosis';
+	font-size: 15px;
+	color: #444;
+}
+
+#send-rs {
+	position: relative;
+	display: block;
+	margin: 3% auto 0;
+	padding: 2%;
+	font-family: 'Dosis';
+	text-transform: uppercase;
+	opacity: 0.5;
+}
+
+#send-rs:hover {
+	opacity: 1;
+}

@@ -38,8 +38,10 @@
 		<Linker>
 			<Add library="lib\libws2_32.a" />
 		</Linker>
+		<Unit filename="include/Database.h" />
 		<Unit filename="include/Server.h" />
 		<Unit filename="main.cpp" />
+		<Unit filename="src/Database.cpp" />
 		<Unit filename="src/Server.cpp" />
 		<Extensions>
 			<code_completion />
