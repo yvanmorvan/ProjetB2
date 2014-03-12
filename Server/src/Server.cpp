@@ -42,17 +42,29 @@ int Server::init(){
 	cout <<"Serveur initialise !" << endl;
 
 	return 0;
-
 }
 
 
 int Server::start(){
 
     SOCKADDR_IN ClientAddr;
-    int ClientAddrLength;
+    int ClientAddrLength, MaxCC = 50, CRequest, i;
     HANDLE hProcessThread;
-    SOCKET NewConnection;
+    SOCKET NewConnection, ClientSocket, ConnectedClients[50] = {0};
     struct thread_param p;
+
+    char recvbuf[512];
+    int recvbuflen = 512;
+    char *sendbuff =
+    "POST /client.php HTTP/1.1\r\n"
+    "Host: 127.0.0.1\r\n"
+    "Connection: close\r\n"
+    "Accept-Charset: ISO-8859-1,UTF-8;q=0.7,*;q=0.7\r\n"
+    "Content-Type: application/x-www-form-urlencoded\r\n"
+    "Content-Length: 10\r\n\r\n"
+    "rqst=close\r\n"
+    "\r\n";
+
 
     if ((ListeningSocket = socket(PF_INET, SOCK_STREAM, IPPROTO_TCP)) == INVALID_SOCKET){
         cerr << "Impossible d'ouvrir le socket : "<< WSAGetLastError() << endl;
@@ -67,7 +79,7 @@ int Server::start(){
         return 0;
     }
 
-    if (listen(ListeningSocket, 0) == SOCKET_ERROR){
+    if (listen(ListeningSocket, SOMAXCONN) == SOCKET_ERROR){
         cerr << "Impossible d'ecouter sur ce port." << endl;
         closesocket(ListeningSocket);
         WSACleanup();
@@ -79,28 +91,101 @@ int Server::start(){
 
     this->running = true;
     ClientAddrLength = sizeof(ClientAddr);
+    // Stock des ports en cours d'exécution
+    fd_set readfds;
+    int activity = 0;
+
 
     // Démarrage du serveur
     while(this->running){
 
-        if ((NewConnection = accept(ListeningSocket, (SOCKADDR *)&ClientAddr, &ClientAddrLength)) == INVALID_SOCKET){
-            cerr << "Connexion non acceptee. Erreur : "<< WSAGetLastError() << endl;
-            closesocket(ListeningSocket);
-            WSACleanup();
-            return 0;
+        // Clearing
+        FD_ZERO(&readfds);
+        // Ajout du socket d'écoute
+        FD_SET(ListeningSocket, &readfds);
+
+        // Ajout des anciens clients non déconnectés
+        for (i=0; i < MaxCC; i++){
+            if (ConnectedClients[i] > 0){
+                FD_SET(ConnectedClients[i], &readfds);
+            }
         }
 
-        p.server = this;
-        p.socket = NewConnection;
+        // Ecoute infinie sur tous les sockets enregistrés
+        // Attente d'une activité
+        activity = select(0, &readfds, NULL, NULL, NULL);
 
-        cout << "\nClient connecte ! IP : "<< inet_ntoa(ClientAddr.sin_addr) << ", port : "<< ntohs(ClientAddr.sin_port)<< endl;
+        // Nouvelle activité
+        if (FD_ISSET(ListeningSocket, &readfds)){
 
-        hProcessThread = CreateThread(NULL, 0, &Server::ThreadLauncher, &p, 0, NULL);
+            if ((NewConnection = accept(ListeningSocket, (SOCKADDR *)&ClientAddr, &ClientAddrLength)) == INVALID_SOCKET){
+                cerr << "Connexion non acceptee. Erreur : "<< WSAGetLastError() << endl;
+                closesocket(ListeningSocket);
+                WSACleanup();
+                return 0;
+            }
 
-        if (hProcessThread == NULL){
-            cerr << "Impossible de creer le processus."<< endl;
+            p.server = this;
+            p.socket = NewConnection;
+
+            // Ajout du nouveau client à la liste des clients connectés.
+            for (i=0; i < MaxCC; i++){
+                if (ConnectedClients[i] == 0){
+                    ConnectedClients[i] = NewConnection;
+                    break;
+                }
+            }
+
+            cout << "\nClient connecte ! IP : "<< inet_ntoa(ClientAddr.sin_addr) << ", port : "<< ntohs(ClientAddr.sin_port)
+                 << ", connexion : "<< NewConnection << endl;
+            /*hProcessThread = CreateThread(NULL, 0, &Server::ThreadLauncher, &p, 0, NULL);
+
+            if (hProcessThread == NULL){
+                cerr << "Impossible de creer le processus."<< endl;
+            }*/
         }
-    }
+
+        // Démarrage du thread pour chaque client connecté
+        for (i=0; i < MaxCC; i++){
+
+            ClientSocket = ConnectedClients[i];
+
+            if (FD_ISSET(ClientSocket, &readfds)){
+
+                // Récupération de la requête du client
+                CRequest = recv(ClientSocket, recvbuf, recvbuflen, 0);
+
+
+                if (CRequest == SOCKET_ERROR){
+
+                    if (WSAGetLastError() == WSAECONNRESET){
+                        cerr << "La connexion " << ClientSocket << " s'est terminee de maniere impromptue." <<endl;
+                    }else{
+                        cerr << "Erreur de lecture de la requete : "<< WSAGetLastError() << endl;
+                    }
+
+                    closesocket(ClientSocket);
+                    ConnectedClients[i] = 0;
+
+                }else if (CRequest == 0){
+
+                    cerr << "La connexion " << ClientSocket << " s'est deconnectee." <<endl;
+                    closesocket(ClientSocket);
+                    ConnectedClients[i] = 0;
+
+                }else{
+                    cout << "Donnees recues : " << recvbuf << endl;
+                    cout << "Envoi de la reponse a la connexion " << ClientSocket << endl;
+                    send(ClientSocket, sendbuff, (int)strlen(sendbuff), 0);
+                }
+
+            }
+        }
+
+    } // END While running
+
+    closesocket(ListeningSocket);
+    WSACleanup();
     return 1;
 }
 
@@ -116,13 +201,12 @@ int Server::pause(){
 
 /* IMPLEMENTATION DE LA GESTION DES THREADS */
 
-
 DWORD Server::ClientThread(SOCKET socket){
 
     cout << "Thread ( "<<socket<<" ) a l'ecoute !\n" << endl;
 
 
-    int result;
+    int result=1;
     int sendresult;
     char recvbuf[512];
     int recvbuflen = 512;
@@ -137,15 +221,15 @@ DWORD Server::ClientThread(SOCKET socket){
         if (result > 0){
             cout << "La connexion "<< socket <<" a envoye : " << recvbuf << endl;
             send(socket, sendbuff, (int)strlen(sendbuff), 0);
+            cout << "On envoie : " << sendbuff << endl;
         }
 
         else if (result == 0){
             cout << "Connexion fermee : "<< socket << endl;
+            break;
         }else{
             cerr << "Erreur de reception des donnees. Erreur : " << WSAGetLastError() << endl;
-            closesocket(socket);
-            WSACleanup();
-            return 0;
+            break;
         }
 
     }while(result > 0);

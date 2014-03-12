@@ -3,39 +3,30 @@
 	$host = "127.0.0.1";
 	$port = "8080";
 
-	/*if (isset($_POST['send-rs'])){
-		$rs = $_POST['research'];*/
-		$rs = "test";
+	if (isset($_POST['rqst'])){
+		echo $_POST['rqst'];
+	}else{
 
-		$socket = socket_create(AF_INET, SOCK_STREAM, SOL_TCP);
-		if ($socket === false) {
-		    echo "socket_create() a échoué : raison :  " . socket_strerror(socket_last_error()) . "\n";
-		} else {
-		    echo "OK.\n";
+		if (isset($_POST['send-rs'])){
+			$rs = $_POST['research'];
+		}else{
+			$rs = "no reasearch";
 		}
 
-		echo "Essai de connexion à '$host' sur le port '$port'...";
-		$result = socket_connect($socket, $host, $port);
-		if ($socket === false) {
-		    echo "socket_connect() a échoué : raison : ($result) " . socket_strerror(socket_last_error($socket)) . "\n";
-		} else {
-		    echo "OK.\n";
+		// Socket instanciation...
+		$client = stream_socket_client("tcp://$host:$port", $errno, $errorMessage);
+		if ($client === false) {
+		    throw new UnexpectedValueException("Failed to instanciate the socket : $errorMessage");
 		}
 
 
-		echo "Envoi de la requête HTTP HEAD...";
-		socket_write($socket, $rs, strlen($rs));
-		echo "OK.\n";
+		// Sending the request...
+		fwrite($client, $rs);
 
-		echo "Lire la réponse : \n\n";
-		while ($out = socket_read($socket, 512, PHP_NORMAL_READ)) {
-		    echo $out;
-		}
+		// And closing.
+		fclose($client);
+	}
 
-		echo "Fermeture du socket...";
-		socket_close($socket);
-		echo "OK.\n\n";
 
-	//}
 
 ?>

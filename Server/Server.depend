@@ -40,13 +40,13 @@
 
 1394114244 c:\users\soerk\desktop\projetb2\server\include\database.h
 
-1394114311 source:c:\wamp\www\projetb2\server\main.cpp
+1394625396 source:c:\wamp\www\projetb2\server\main.cpp
 	<iostream>
 	"include/Server.h"
 	"include/Database.h"
 	"include/winsock2.h"
 
-1393327709 c:\wamp\www\projetb2\server\include\server.h
+1394649019 c:\wamp\www\projetb2\server\include\server.h
 	"winsock2.h"
 
 1228534334 c:\wamp\www\projetb2\server\include\winsock2.h
@@ -57,7 +57,7 @@
 1394114276 source:c:\wamp\www\projetb2\server\src\database.cpp
 	"../include/Database.h"
 
-1394621467 source:c:\wamp\www\projetb2\server\src\server.cpp
+1394649791 source:c:\wamp\www\projetb2\server\src\server.cpp
 	<iostream>
 	"../include/Server.h"
 	"../include/winsock2.h"
