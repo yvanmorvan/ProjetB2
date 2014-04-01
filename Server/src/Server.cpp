@@ -48,22 +48,14 @@ int Server::init(){
 int Server::start(){
 
     SOCKADDR_IN ClientAddr;
-    int ClientAddrLength, MaxCC = 50, CRequest, i;
+    int ClientAddrLength, MaxCC = 50, CRequest, i, j;
     HANDLE hProcessThread;
     SOCKET NewConnection, ClientSocket, ConnectedClients[50] = {0};
     struct thread_param p;
 
     char recvbuf[512];
     int recvbuflen = 512;
-    char *sendbuff =
-    "POST /client.php HTTP/1.1\r\n"
-    "Host: 127.0.0.1\r\n"
-    "Connection: close\r\n"
-    "Accept-Charset: ISO-8859-1,UTF-8;q=0.7,*;q=0.7\r\n"
-    "Content-Type: application/x-www-form-urlencoded\r\n"
-    "Content-Length: 10\r\n\r\n"
-    "rqst=close\r\n"
-    "\r\n";
+    char *sendbuff = "RSPS";
 
 
     if ((ListeningSocket = socket(PF_INET, SOCK_STREAM, IPPROTO_TCP)) == INVALID_SOCKET){
@@ -138,11 +130,6 @@ int Server::start(){
 
             cout << "\nClient connecte ! IP : "<< inet_ntoa(ClientAddr.sin_addr) << ", port : "<< ntohs(ClientAddr.sin_port)
                  << ", connexion : "<< NewConnection << endl;
-            /*hProcessThread = CreateThread(NULL, 0, &Server::ThreadLauncher, &p, 0, NULL);
-
-            if (hProcessThread == NULL){
-                cerr << "Impossible de creer le processus."<< endl;
-            }*/
         }
 
         // Démarrage du thread pour chaque client connecté
@@ -153,6 +140,10 @@ int Server::start(){
             if (FD_ISSET(ClientSocket, &readfds)){
 
                 // Récupération de la requête du client
+                // Réinitialisation du buffer
+                for (j=0; j<recvbuflen; j++){
+                    recvbuf[j] = '\0';
+                }
                 CRequest = recv(ClientSocket, recvbuf, recvbuflen, 0);
 
 

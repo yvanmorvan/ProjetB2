@@ -1,32 +1,47 @@
 <?php
 
-	$host = "127.0.0.1";
-	$port = "8080";
+echo "<h2>TCP/IP Connection</h2><br />";
 
-	if (isset($_POST['rqst'])){
-		echo $_POST['rqst'];
-	}else{
+/* Get the port for the WWW service. */
+$service_port = 8080;
 
-		if (isset($_POST['send-rs'])){
-			$rs = $_POST['research'];
-		}else{
-			$rs = "no reasearch";
-		}
+/* Get the IP address for the target host. */
+$address = '127.0.0.1';
 
-		// Socket instanciation...
-		$client = stream_socket_client("tcp://$host:$port", $errno, $errorMessage);
-		if ($client === false) {
-		    throw new UnexpectedValueException("Failed to instanciate the socket : $errorMessage");
-		}
+/* Create a TCP/IP socket. */
+$socket = socket_create(AF_INET, SOCK_STREAM, SOL_TCP);
+if ($socket === false) {
+    echo "socket_create() failed: reason: " . socket_strerror(socket_last_error());
+} else {
+    echo "OK.";
+}
 
+echo "Attempting to connect to '$address' on port '$service_port'...";
+$result = socket_connect($socket, $address, $service_port);
+if ($result === false) {
+    echo "socket_connect() failed.<br />Reason: ($result) " . socket_strerror(socket_last_error($socket)) . "<br />";
+} else {
+    echo "OK.<br />";
+}
 
-		// Sending the request...
-		fwrite($client, $rs);
+if (isset($_POST['send-rs'])){
+	$in = $_POST['research'];
+}
+$out = '';
 
-		// And closing.
-		fclose($client);
-	}
+echo "Sending request...";
+socket_write($socket, $in, strlen($in));
+echo "OK.<br />";
 
+echo "Reading response:<br /><br />";
+while ($out = socket_read($socket, 2048)){
+    echo $out."<br /><br />";
+    if ($out != ''){
+    	break;
+    }
+}
 
-
+echo "Closing socket...";
+socket_close($socket);
+echo "OK.<br /><br />";
 ?>
