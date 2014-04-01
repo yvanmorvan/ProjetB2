@@ -40,25 +40,81 @@
 
 1394114244 c:\users\soerk\desktop\projetb2\server\include\database.h
 
-1394625396 source:c:\wamp\www\projetb2\server\main.cpp
+1394628996 source:c:\wamp\www\projetb2\server\main.cpp
 	<iostream>
 	"include/Server.h"
 	"include/Database.h"
 	"include/winsock2.h"
 
-1394649019 c:\wamp\www\projetb2\server\include\server.h
+1394652619 c:\wamp\www\projetb2\server\include\server.h
 	"winsock2.h"
 
-1228534334 c:\wamp\www\projetb2\server\include\winsock2.h
+1228537934 c:\wamp\www\projetb2\server\include\winsock2.h
 	<windows.h>
 
-1394114244 c:\wamp\www\projetb2\server\include\database.h
+1396347873 c:\wamp\www\projetb2\server\include\database.h
+	"mysql_connection.h"
+	"../include/cppconn/driver.h"
+	"../include/cppconn/exception.h"
+	"../include/cppconn/resultset.h"
+	"../include/cppconn/statement.h"
 
-1394114276 source:c:\wamp\www\projetb2\server\src\database.cpp
+1394117876 source:c:\wamp\www\projetb2\server\src\database.cpp
 	"../include/Database.h"
 
-1394649791 source:c:\wamp\www\projetb2\server\src\server.cpp
+1394656431 source:c:\wamp\www\projetb2\server\src\server.cpp
 	<iostream>
 	"../include/Server.h"
 	"../include/winsock2.h"
+
+1396347899 c:\wamp\www\projetb2\server\include\mysql_connection.h
+	"../include/cppconn/connection.h"
+
+1240013454 c:\wamp\www\projetb2\server\include\cppconn\driver.h
+	<string>
+	<map>
+	"connection.h"
+	"build_config.h"
+
+1240013454 c:\wamp\www\projetb2\server\include\cppconn\connection.h
+	<string>
+	<map>
+	"build_config.h"
+	"warning.h"
+
+1240013454 c:\wamp\www\projetb2\server\include\cppconn\build_config.h
+
+1240013454 c:\wamp\www\projetb2\server\include\cppconn\warning.h
+	<stdexcept>
+	<string>
+	<memory>
+
+1240013454 c:\wamp\www\projetb2\server\include\cppconn\exception.h
+	"build_config.h"
+	<stdexcept>
+	<string>
+	<memory>
+
+1240013454 c:\wamp\www\projetb2\server\include\cppconn\resultset.h
+	"config.h"
+	<list>
+	<string>
+	<map>
+	<iostream>
+	"resultset_metadata.h"
+
+1396348273 c:\wamp\www\projetb2\server\include\cppconn\config.h
+	<stdint.h>
+	<inttypes.h>
+
+1240013454 c:\wamp\www\projetb2\server\include\cppconn\resultset_metadata.h
+	<string>
+	"datatype.h"
+
+1240013454 c:\wamp\www\projetb2\server\include\cppconn\datatype.h
+
+1240013454 c:\wamp\www\projetb2\server\include\cppconn\statement.h
+	"config.h"
+	"resultset.h"
+	<string>
 
